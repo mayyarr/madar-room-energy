@@ -54,7 +54,7 @@ Python · Flask (SSE) · Groq · SQLite · pandas · numpy · networkx · pypdf 
 ## Getting started
 
 ```bash
-git clone https://github.com/<your-username>/madar-energy.git
+git clone https://github.com/mayyarr/madar-energy.git
 cd madar-energy
 python -m venv venv
 venv\Scripts\activate          # Windows  (Linux/Mac: source venv/bin/activate)
