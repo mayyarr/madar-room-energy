@@ -1,0 +1,225 @@
+[
+  {
+    "id": "M1",
+    "domain": "meter",
+    "region": "Amman",
+    "title": "هبوط استهلاك - JOM110001 (عمّان)",
+    "event_text": "Meter JOM110001 in Amman region: daily consumption dropped sharply in the last two weeks while neighbouring meters stayed normal. Investigate as of 2025-06-15.",
+    "injected_fault": "تلاعب/تجاوز على العداد: الاستهلاك نزل لـ 35% من طبيعته آخر 14 يوم، والقراءات كاملة (مش عطل اتصال).",
+    "expected_status": "resolved",
+    "expected_winner": "Meter Agent",
+    "expected_keywords": [
+      "tamper",
+      "bypass",
+      "drop",
+      "fault"
+    ],
+    "checks": [
+      {
+        "tool": "detect_consumption_drop",
+        "args": {
+          "meter_id": "JOM110001"
+        },
+        "flagged": true
+      },
+      {
+        "tool": "compare_history_vs_neighbors",
+        "args": {
+          "meter_id": "JOM110001"
+        },
+        "flagged": true
+      },
+      {
+        "tool": "check_data_quality",
+        "args": {
+          "meter_id": "JOM110001"
+        },
+        "flagged": false
+      }
+    ]
+  },
+  {
+    "id": "M2",
+    "domain": "meter",
+    "region": "Irbid",
+    "title": "قراءات ناقصة - JOM120001 (إربد)",
+    "event_text": "Meter JOM120001 in Irbid region shows irregular and missing daily readings over the last month. Investigate as of 2025-06-15.",
+    "injected_fault": "عطل اتصال/عداد: 10 أيام مفقودة بالكامل + 6 أيام قراءات ناقصة من آخر 30 يوم. الاستهلاك الفعلي طبيعي.",
+    "expected_status": "resolved",
+    "expected_winner": "Meter Agent",
+    "expected_keywords": [
+      "communication",
+      "data gap",
+      "missing",
+      "meter fault"
+    ],
+    "checks": [
+      {
+        "tool": "check_data_quality",
+        "args": {
+          "meter_id": "JOM120001"
+        },
+        "flagged": true
+      }
+    ]
+  },
+  {
+    "id": "M3",
+    "domain": "meter",
+    "region": "Zarqa",
+    "title": "استهلاك عالي - JOM130001 (الزرقاء) — حالة ضابطة",
+    "event_text": "Meter JOM130001 in Zarqa region consumes far more than its neighbours. Investigate as of 2025-06-15.",
+    "injected_fault": "ما في عطل (حالة ضابطة): مستهلك كبير بطبيعته، دايماً ~2.4× جيرانه من أول السنة. الجواب الصح: لا عطل / غير محسوم.",
+    "expected_status": "undecided",
+    "expected_winner": null,
+    "expected_keywords": [
+      "always",
+      "heavy consumer",
+      "not a fault"
+    ],
+    "checks": [
+      {
+        "tool": "compare_history_vs_neighbors",
+        "args": {
+          "meter_id": "JOM130001"
+        },
+        "flagged": false,
+        "field": "chronic_high_consumer",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "C1",
+    "domain": "charging",
+    "region": "Salt",
+    "title": "ارتفاع استهلاك - JOM140001 (السلط)",
+    "event_text": "Meter JOM140001 in Salt region rose by 9.5 kWh/day in the last two weeks as of 2025-06-15. Investigate the cause.",
+    "injected_fault": "شاحن سيارة كهربائية جديد (JO-SLT-CH05) كان شبه ساكت وبلّش يشتغل يومياً آخر 14 يوم بـ ~9.5 kWh، وهو بالضبط الزيادة على العداد.",
+    "expected_status": "resolved",
+    "expected_winner": "Charging Agent",
+    "expected_keywords": [
+      "JO-SLT-CH05",
+      "charger",
+      "EV"
+    ],
+    "checks": [
+      {
+        "tool": "detect_new_charger_activity",
+        "args": {
+          "region": "Salt",
+          "as_of_day": "2025-06-15"
+        },
+        "flagged": true
+      },
+      {
+        "tool": "explain_meter_change",
+        "args": {
+          "region": "Salt",
+          "as_of_day": "2025-06-15",
+          "meter_delta_kwh_per_day": 9.5
+        },
+        "flagged": true
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "domain": "charging",
+    "region": "Karak",
+    "title": "شكاوى شحن - محطة الكرك",
+    "event_text": "Drivers in Karak region complain that public EV chargers stay connected for hours but deliver almost no energy. Investigate as of 2025-06-15.",
+    "injected_fault": "الشاحن JO-KRK-CH03 عطلان: 65% من جلساته آخر 28 يوم اتصال ساعتين بطاقة شبه صفر. باقي الشواحن سليمة.",
+    "expected_status": "resolved",
+    "expected_winner": "Charging Agent",
+    "expected_keywords": [
+      "JO-KRK-CH03",
+      "faulty",
+      "fail"
+    ],
+    "checks": [
+      {
+        "tool": "compare_charger_failure_rate",
+        "args": {
+          "region": "Karak",
+          "as_of_day": "2025-06-15"
+        },
+        "flagged": true
+      }
+    ]
+  },
+  {
+    "id": "P1",
+    "domain": "plant",
+    "region": "Aqaba",
+    "title": "ارتفاع حرارة - Unit 201 (العقبة)",
+    "event_text": "Incident: unit 201 at Aqaba thermal station shows rising temperatures. Investigate the unit as of cycle 120.",
+    "injected_fault": "تدهور حراري حقيقي متسارع: آخر 40 دورة كل الحساسات بتنحرف مع بعض باتجاه التدهور (مش حساس واحد).",
+    "expected_status": "resolved",
+    "expected_winner": "Plant Agent",
+    "expected_keywords": [
+      "degradation",
+      "wear",
+      "thermal"
+    ],
+    "checks": [
+      {
+        "tool": "detect_thermal_anomaly",
+        "args": {
+          "unit_id": 201,
+          "as_of_cycle": 120
+        },
+        "flagged": true
+      },
+      {
+        "tool": "get_degradation_trend",
+        "args": {
+          "unit_id": 201,
+          "as_of_cycle": 120
+        },
+        "flagged": true
+      },
+      {
+        "tool": "check_sensor_quality",
+        "args": {
+          "unit_id": 201,
+          "as_of_cycle": 120
+        },
+        "flagged": false
+      }
+    ]
+  },
+  {
+    "id": "P2",
+    "domain": "plant",
+    "region": "Zarqa",
+    "title": "قراءة حرارة شاذة - Unit 202 (الزرقاء)",
+    "event_text": "Incident: unit 202 at Al-Hussein thermal station (Zarqa) reports a sudden temperature spike. Investigate the unit as of cycle 120.",
+    "injected_fault": "عطل حساس (s3) مش عطل محرك: قفزة معزولة بحساس واحد آخر 8 دورات والباقي سليم. الجواب الصح: عطل حساس / ما في تدهور محرك.",
+    "expected_status": "undecided",
+    "expected_winner": null,
+    "expected_keywords": [
+      "sensor",
+      "s3",
+      "instrument"
+    ],
+    "checks": [
+      {
+        "tool": "check_sensor_quality",
+        "args": {
+          "unit_id": 202,
+          "as_of_cycle": 120
+        },
+        "flagged": true
+      },
+      {
+        "tool": "detect_thermal_anomaly",
+        "args": {
+          "unit_id": 202,
+          "as_of_cycle": 120
+        },
+        "flagged": false
+      }
+    ]
+  }
+]
